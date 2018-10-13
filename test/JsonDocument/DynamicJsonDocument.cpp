@@ -38,4 +38,15 @@ TEST_CASE("DynamicJsonDocument") {
       REQUIRE(doc.memoryUsage() == JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(0));
     }
   }
+
+  SECTION("operator=(DynamicJsonDocument)") {
+    DynamicJsonDocument doc2;
+    deserializeJson(doc2, "{\"hello\":\"world\"}");
+
+    doc = doc2;
+
+    std::string json;
+    serializeJson(doc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+  }
 }
