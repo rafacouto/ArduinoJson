@@ -110,6 +110,13 @@ class DynamicJsonDocument : public JsonDocument<DynamicMemoryPool> {
 template <size_t CAPACITY>
 class StaticJsonDocument : public JsonDocument<StaticMemoryPool<CAPACITY> > {
  public:
+  StaticJsonDocument() {}
+
+  template <typename T>
+  StaticJsonDocument(const JsonDocument<T>& src) {
+    this->template copy(src);
+  }
+
   StaticMemoryPoolBase& memoryPool() {
     return JsonDocument<StaticMemoryPool<CAPACITY> >::memoryPool();
   }

@@ -58,4 +58,32 @@ TEST_CASE("StaticJsonDocument") {
     REQUIRE(json == "{\"hello\":\"world\"}");
     REQUIRE(doc1.nestingLimit == 42);
   }
+
+  SECTION("Assign from DynamicJsonDocument") {
+    StaticJsonDocument<200> doc1;
+    DynamicJsonDocument doc2;
+    doc1.to<JsonVariant>().set(666);
+    deserializeJson(doc2, "{\"hello\":\"world\"}");
+    doc2.nestingLimit = 42;
+
+    doc1 = doc2;
+
+    std::string json;
+    serializeJson(doc1, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc1.nestingLimit == 42);
+  }
+
+  SECTION("Construct from StaticJsonDocument of different size") {
+    StaticJsonDocument<300> doc2;
+    deserializeJson(doc2, "{\"hello\":\"world\"}");
+    doc2.nestingLimit = 42;
+
+    StaticJsonDocument<200> doc1 = doc2;
+
+    std::string json;
+    serializeJson(doc1, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc1.nestingLimit == 42);
+  }
 }
