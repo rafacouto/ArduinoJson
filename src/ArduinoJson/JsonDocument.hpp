@@ -59,7 +59,8 @@ class JsonDocument : public Visitable {
 
  protected:
   template <typename T>
-  void copy(const T& src) {
+  void copy(const JsonDocument<T>& src) {
+    nestingLimit = src.nestingLimit;
     to<JsonVariant>().set(src.as<JsonVariant>());
   }
 
@@ -84,18 +85,23 @@ class DynamicJsonDocument : public JsonDocument<DynamicMemoryPool> {
   }
 
   DynamicJsonDocument(const DynamicJsonDocument& src) {
-    nestingLimit = src.nestingLimit;
+    memoryPool().reserve(src.memoryUsage());
     copy(src);
   }
 
-  template <typename TMemoryPool>
-  DynamicJsonDocument(const JsonDocument<TMemoryPool>& src) {
-    nestingLimit = src.nestingLimit;
+  template <typename T>
+  DynamicJsonDocument(const JsonDocument<T>& src) {
+    memoryPool().reserve(src.memoryUsage());
     copy(src);
   }
 
-  DynamicJsonDocument operator=(const DynamicJsonDocument& src) {
-    nestingLimit = src.nestingLimit;
+  DynamicJsonDocument& operator=(const DynamicJsonDocument& src) {
+    copy(src);
+    return *this;
+  }
+
+  template <typename T>
+  DynamicJsonDocument& operator=(const JsonDocument<T>& src) {
     copy(src);
     return *this;
   }
