@@ -86,4 +86,17 @@ TEST_CASE("StaticJsonDocument") {
     REQUIRE(json == "{\"hello\":\"world\"}");
     REQUIRE(doc1.nestingLimit == 42);
   }
+
+  SECTION("Construct from DynamicJsonDocument") {
+    DynamicJsonDocument doc2;
+    deserializeJson(doc2, "{\"hello\":\"world\"}");
+    doc2.nestingLimit = 42;
+
+    StaticJsonDocument<200> doc1 = doc2;
+
+    std::string json;
+    serializeJson(doc1, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc1.nestingLimit == 42);
+  }
 }
