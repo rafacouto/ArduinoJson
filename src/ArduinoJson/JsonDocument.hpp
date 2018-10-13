@@ -114,7 +114,7 @@ class StaticJsonDocument : public JsonDocument<StaticMemoryPool<CAPACITY> > {
 
   template <typename T>
   StaticJsonDocument(const JsonDocument<T>& src) {
-    this->template copy(src);
+    this->copy(src);
   }
 
   StaticMemoryPoolBase& memoryPool() {
@@ -123,7 +123,7 @@ class StaticJsonDocument : public JsonDocument<StaticMemoryPool<CAPACITY> > {
 
   template <typename T>
   StaticJsonDocument operator=(const JsonDocument<T>& src) {
-    this->template copy(src);
+    this->copy(src);
     return *this;
   }
 };
