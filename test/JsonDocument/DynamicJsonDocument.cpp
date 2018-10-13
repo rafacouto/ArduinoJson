@@ -39,6 +39,18 @@ TEST_CASE("DynamicJsonDocument") {
     }
   }
 
+  SECTION("Copy constructor") {
+    deserializeJson(doc, "{\"hello\":\"world\"}");
+    doc.nestingLimit = 42;
+
+    DynamicJsonDocument doc2 = doc;
+
+    std::string json;
+    serializeJson(doc2, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc2.nestingLimit == 42);
+  }
+
   SECTION("Copy assignment") {
     DynamicJsonDocument doc2;
     deserializeJson(doc2, "{\"hello\":\"world\"}");
@@ -52,15 +64,16 @@ TEST_CASE("DynamicJsonDocument") {
     REQUIRE(doc.nestingLimit == 42);
   }
 
-  SECTION("Copy constructor") {
-    deserializeJson(doc, "{\"hello\":\"world\"}");
-    doc.nestingLimit = 42;
+  SECTION("Construct from StaticJsonDocument") {
+    StaticJsonDocument<200> sdoc;
+    deserializeJson(sdoc, "{\"hello\":\"world\"}");
+    sdoc.nestingLimit = 42;
 
-    DynamicJsonDocument doc2 = doc;
+    DynamicJsonDocument ddoc = sdoc;
 
     std::string json;
-    serializeJson(doc2, json);
+    serializeJson(ddoc, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(doc2.nestingLimit == 42);
+    REQUIRE(ddoc.nestingLimit == 42);
   }
 }

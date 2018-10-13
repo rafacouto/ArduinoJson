@@ -88,6 +88,12 @@ class DynamicJsonDocument : public JsonDocument<DynamicMemoryPool> {
     copy(src);
   }
 
+  template <typename TMemoryPool>
+  DynamicJsonDocument(const JsonDocument<TMemoryPool>& src) {
+    nestingLimit = src.nestingLimit;
+    copy(src);
+  }
+
   DynamicJsonDocument operator=(const DynamicJsonDocument& src) {
     nestingLimit = src.nestingLimit;
     copy(src);
