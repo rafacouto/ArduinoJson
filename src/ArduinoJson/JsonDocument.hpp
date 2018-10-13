@@ -84,6 +84,7 @@ class DynamicJsonDocument : public JsonDocument<DynamicMemoryPool> {
   }
 
   DynamicJsonDocument(const DynamicJsonDocument& src) {
+    nestingLimit = src.nestingLimit;
     copy(src);
   }
 

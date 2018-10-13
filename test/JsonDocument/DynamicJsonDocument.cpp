@@ -42,21 +42,25 @@ TEST_CASE("DynamicJsonDocument") {
   SECTION("Copy assignment") {
     DynamicJsonDocument doc2;
     deserializeJson(doc2, "{\"hello\":\"world\"}");
+    doc2.nestingLimit = 42;
 
     doc = doc2;
 
     std::string json;
     serializeJson(doc, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc.nestingLimit == 42);
   }
 
   SECTION("Copy constructor") {
     deserializeJson(doc, "{\"hello\":\"world\"}");
+    doc.nestingLimit = 42;
 
     DynamicJsonDocument doc2 = doc;
 
     std::string json;
     serializeJson(doc2, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc2.nestingLimit == 42);
   }
 }
