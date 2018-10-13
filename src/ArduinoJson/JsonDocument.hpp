@@ -61,7 +61,7 @@ class JsonDocument : public Visitable {
   template <typename T>
   void copy(const JsonDocument<T>& src) {
     nestingLimit = src.nestingLimit;
-    to<JsonVariant>().set(src.as<JsonVariant>());
+    to<JsonVariant>().set(src.template as<JsonVariant>());
   }
 
  private:
