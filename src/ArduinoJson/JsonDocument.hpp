@@ -113,6 +113,12 @@ class StaticJsonDocument : public JsonDocument<StaticMemoryPool<CAPACITY> > {
   StaticMemoryPoolBase& memoryPool() {
     return JsonDocument<StaticMemoryPool<CAPACITY> >::memoryPool();
   }
+
+  template <typename T>
+  StaticJsonDocument operator=(const JsonDocument<T>& src) {
+    this->template copy(src);
+    return *this;
+  }
 };
 
 }  // namespace ARDUINOJSON_NAMESPACE

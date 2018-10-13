@@ -6,9 +6,8 @@
 #include <catch.hpp>
 
 TEST_CASE("StaticJsonDocument") {
-  StaticJsonDocument<200> doc;
-
   SECTION("serializeJson()") {
+    StaticJsonDocument<200> doc;
     JsonObject obj = doc.to<JsonObject>();
     obj["hello"] = "world";
 
@@ -19,27 +18,44 @@ TEST_CASE("StaticJsonDocument") {
   }
 
   SECTION("Copy assignment") {
-    StaticJsonDocument<200> doc2;
+    StaticJsonDocument<200> doc1, doc2;
+    doc1.to<JsonVariant>().set(666);
     deserializeJson(doc2, "{\"hello\":\"world\"}");
     doc2.nestingLimit = 42;
 
-    doc = doc2;
+    doc1 = doc2;
 
     std::string json;
-    serializeJson(doc, json);
+    serializeJson(doc1, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
-    REQUIRE(doc.nestingLimit == 42);
+    REQUIRE(doc1.nestingLimit == 42);
   }
 
   SECTION("Copy constructor") {
-    deserializeJson(doc, "{\"hello\":\"world\"}");
-    doc.nestingLimit = 42;
+    StaticJsonDocument<200> doc1;
+    deserializeJson(doc1, "{\"hello\":\"world\"}");
+    doc1.nestingLimit = 42;
 
-    StaticJsonDocument<200> doc2 = doc;
+    StaticJsonDocument<200> doc2 = doc1;
 
     std::string json;
     serializeJson(doc2, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
     REQUIRE(doc2.nestingLimit == 42);
+  }
+
+  SECTION("Assign from StaticJsonDocument of different capacity") {
+    StaticJsonDocument<200> doc1;
+    StaticJsonDocument<300> doc2;
+    doc1.to<JsonVariant>().set(666);
+    deserializeJson(doc2, "{\"hello\":\"world\"}");
+    doc2.nestingLimit = 42;
+
+    doc1 = doc2;
+
+    std::string json;
+    serializeJson(doc1, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+    REQUIRE(doc1.nestingLimit == 42);
   }
 }
