@@ -39,7 +39,7 @@ TEST_CASE("DynamicJsonDocument") {
     }
   }
 
-  SECTION("operator=(DynamicJsonDocument)") {
+  SECTION("Copy assignment") {
     DynamicJsonDocument doc2;
     deserializeJson(doc2, "{\"hello\":\"world\"}");
 
@@ -47,6 +47,16 @@ TEST_CASE("DynamicJsonDocument") {
 
     std::string json;
     serializeJson(doc, json);
+    REQUIRE(json == "{\"hello\":\"world\"}");
+  }
+
+  SECTION("Copy constructor") {
+    deserializeJson(doc, "{\"hello\":\"world\"}");
+
+    DynamicJsonDocument doc2 = doc;
+
+    std::string json;
+    serializeJson(doc2, json);
     REQUIRE(json == "{\"hello\":\"world\"}");
   }
 }
